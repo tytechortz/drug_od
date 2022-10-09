@@ -107,6 +107,8 @@ def all_drugs(all_drug_data, years):
     adams_tot = len(df_adams_ad)
     df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
     arapahoe_tot = len(df_arapahoe_ad)
+    df_douglas_ad = df_ad.loc[(df_ad['county'] == 'Douglas')]
+    douglas_tot = len(df_douglas_ad)
 
 
 
@@ -125,6 +127,11 @@ def all_drugs(all_drug_data, years):
         ),
         html.Div([
             html.H6('Arapahoe = {}'.format(arapahoe_tot))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Douglas = {}'.format(douglas_tot))
         ],
             className='row'
         ),
