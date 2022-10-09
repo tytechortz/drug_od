@@ -28,6 +28,7 @@ age_groups = [-np.inf, 1,4,9,14,19,24,29,34,39,44,49,54,59,64,69,74,79,84,np.inf
 df['agegroup'] = pd.cut(df['age_yr'], bins=age_groups, labels=['0','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60-64','65-69','70-74','75-79','80-84','85+'])
 df['ucid'] = df['ucod'].str[:1]
 df['u'] = df['ucod'].str[1:3].fillna(0).astype(int)
+df.reset_index(inplace=True)
 # ad = df.loc[((df['ucid']=='X') & ((df['u'].between(40,44)) | (df['u'].between(60,64)) | (df['u']==85))) | ((df['ucid']=='Y') & df['u'].between(10,14))]
 
 
@@ -61,7 +62,7 @@ def get_layout():
             ],
                 className='row'
             ),
-            dcc.Store(id='all-data', storage_type='session'),
+            dcc.Store(id='all-data', storage_type='memory'),
         ]
     
     )
@@ -95,7 +96,8 @@ def get_stats(years):
     Input('all-data', 'data'))
 def all_drugs(all_drug_data):
     df_ad = pd.read_json(all_drug_data)
-    df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | df_ad['u'].between(60,64)))]
+    df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
+
 
 
     print(df_ad)
