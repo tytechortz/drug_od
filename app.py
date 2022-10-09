@@ -97,15 +97,39 @@ def get_stats(years):
 
 @app.callback(
     Output('all-drug-stats', 'children'),
-    Input('all-data', 'data'))
-def all_drugs(all_drug_data):
+    Input('all-data', 'data'),
+    Input('years', 'value'))
+def all_drugs(all_drug_data, years):
     df_ad = pd.read_json(all_drug_data)
     df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
+
+    df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    adams_tot = len(df_adams_ad)
+    df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    arapahoe_tot = len(df_arapahoe_ad)
+
 
 
 
     print(df_ad)
-    return html.H2('Hello')
+    return html.Div([
+        html.Div([
+            html.H4('All Drug OD Total For {}'.format(years))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Adams = {}'.format(adams_tot))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Arapahoe = {}'.format(arapahoe_tot))
+        ],
+            className='row'
+        ),
+    ])
+
 
 
 
