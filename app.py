@@ -24,6 +24,10 @@ conditions = [df['AgeId'] == 1, df['AgeId'] != 1]
 choices = [df['age'], 0]
 df['age_yr'] = np.select(conditions, choices)
 
+county_conditions = [df['coor'] == 1, df['coor'] == 3, df['coor'] == 18]
+county_choices = ['Adams', 'Arapahoe', 'Douglas']
+df['county'] = np.select(county_conditions, county_choices)
+
 age_groups = [-np.inf, 1,4,9,14,19,24,29,34,39,44,49,54,59,64,69,74,79,84,np.inf]
 df['agegroup'] = pd.cut(df['age_yr'], bins=age_groups, labels=['0','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60-64','65-69','70-74','75-79','80-84','85+'])
 df['ucid'] = df['ucod'].str[:1]
@@ -83,7 +87,7 @@ def get_stats(years):
     selected_df = df[df['year'].isin(years)]
     # print(selected_df)
     
-    df1 = selected_df[['ResideCounty', 'age', 'dob', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u']]
+    df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county']]
 
     # print(df1)
 
