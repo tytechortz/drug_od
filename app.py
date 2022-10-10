@@ -115,7 +115,7 @@ def all_drugs(all_drug_data, years):
     df_douglas_ad = df_ad.loc[(df_ad['county'] == 'Douglas')]
     douglas_tot = len(df_douglas_ad)
     tc_tot = adams_tot + arapahoe_tot + douglas_tot
-    print(tc_tot)
+    # print(tc_tot)
 
 
 
@@ -154,17 +154,17 @@ def all_drugs(all_drug_data, years):
     Input('all-data', 'data'),
     Input('years', 'value'))
 def all_drugs(all_drug_data, years):
-    df_ad = pd.read_json(all_drug_data)
-    df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
-
+    df_ad_op = pd.read_json(all_drug_data)
+    df_ad_op = df_ad_op.loc[((df_ad_op['ucid']=='X') & ((df_ad_op['u'].between(40,44)) | (df_ad_op['u'].between(60,64)) | (df_ad_op['u']==85))) | ((df_ad_op['ucid']=='Y') & df_ad_op['u'].between(10,14))]
+    print(df_ad_op)
 
     opiod_codes = ['T402', 'T403', 'T404']
-    df_opiod = df_ad.loc[df_ad.iloc[:, 5:17].isin(opiod_codes).any(axis=1)]
+    df_opiod = df_ad_op.loc[df_ad_op.iloc[:, 1:13].isin(opiod_codes).any(axis=1)]
     print(df_opiod)
     df_adams_opiod = df_opiod.loc[(df_opiod['county'] == 'Adams')]
     adams_tot = len(df_adams_opiod)
-    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
-    # arapahoe_tot = len(df_arapahoe_ad)
+    df_arapahoe_ad = df_opiod.loc[(df_opiod['county'] == 'Arapahoe')]
+    arapahoe_tot = len(df_arapahoe_ad)
     # df_douglas_ad = df_ad.loc[(df_ad['county'] == 'Douglas')]
     # douglas_tot = len(df_douglas_ad)
     # tc_tot = adams_tot + arapahoe_tot + douglas_tot
@@ -172,7 +172,7 @@ def all_drugs(all_drug_data, years):
 
 
 
-    print(df_ad)
+    # print(df_ad)
     return html.Div([
         html.Div([
             html.H4('Opiod OD Total For {}'.format(years))
@@ -184,11 +184,11 @@ def all_drugs(all_drug_data, years):
         ],
             className='row'
         ),
-        # html.Div([
-        #     html.H6('Arapahoe = {}'.format(arapahoe_tot))
-        # ],
-        #     className='row'
-        # ),
+        html.Div([
+            html.H6('Arapahoe = {}'.format(arapahoe_tot))
+        ],
+            className='row'
+        ),
         # html.Div([
         #     html.H6('Douglas = {}'.format(douglas_tot))
         # ],
