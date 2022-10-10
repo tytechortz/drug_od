@@ -3,6 +3,10 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import numpy as np
 
+from homepage import Homepage
+from drugs import drug_App
+
+
 
 
 
@@ -40,44 +44,67 @@ df.reset_index(inplace=True)
 # print(df)
 
 
-def get_layout():
-    return html.Div(
-        [
-            html.Div([
-                html.H4('Drug OD Data')
-            ],
-                className='row'
-            ),
-            html.Div([
-                html.Div([
-                    dcc.Dropdown(
-                        [2018,2019,2020,2021],
-                        id='years',
-                        multi=True
-                    ),
-                ],
-                    className='four columns'
-                ),
-            ],
-                className='row'
-            ),
-            html.Div([
-                html.Div(id='all-drug-stats'),
-            ],
-                className='row'
-            ),
-            html.Div([
-                html.Div(id='opiod-stats'),
-            ],
-                className='row'
-            ),
-            dcc.Store(id='all-data', storage_type='memory'),
-        ]
+# def get_layout():
+#     return html.Div(
+#         [
+#             html.Div([
+#                 html.H4('Drug OD Data')
+#             ],
+#                 className='row'
+#             ),
+#             html.Div([
+#                 html.Div([
+#                     dcc.Dropdown(
+#                         [2018,2019,2020,2021],
+#                         id='years',
+#                         multi=True
+#                     ),
+#                 ],
+#                     className='four columns'
+#                 ),
+#             ],
+#                 className='row'
+#             ),
+#             html.Div([
+#                 html.Div(id='all-drug-stats'),
+#             ],
+#                 className='row'
+#             ),
+#             html.Div([
+#                 html.Div(id='opiod-stats'),
+#             ],
+#                 className='row'
+#             ),
+#             dcc.Store(id='all-data', storage_type='memory'),
+#         ]
     
-    )
+#     )
 
-app = dash.Dash(__name__)
-app.layout = get_layout
+app = dash.Dash(name=__name__, 
+                title="Drug Overdose Data Dashboard",
+                assets_folder="static",
+                assets_url_path="static")
+
+application = app.server
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh = False),
+    html.Div(id = 'page-content'),
+    dcc.Store(id='all-data', storage_type='memory'),
+])
+
+@app.callback(Output('page-content', 'children'),
+            [Input('url', 'pathname')])
+def display_page(pathname):
+    if pathname == '/drug-data':
+        return drug_App()
+    elif pathname == '/county-data':
+        return county_App()
+    else:
+        return Homepage()
+
+# app = dash.Dash(__name__)
+# app.layout = get_layout
 # app.config.supress_callback_exceptions = True
 
 
@@ -99,6 +126,9 @@ def get_stats(years):
 
 
     return df1.to_json()
+
+
+
 
 @app.callback(
     Output('all-drug-stats', 'children'),
