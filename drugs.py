@@ -24,6 +24,14 @@ def get_nav_bar():
             html.Div([], className = 'two columns'),
             html.Div([
                 dcc.Link(
+                    html.H6(children='home'),
+                    href='/homepage'
+                )
+            ],
+                className='two columns'
+            ),
+            html.Div([
+                dcc.Link(
                     html.H6(children='county'),
                     href='/counties'
                 )
@@ -39,10 +47,24 @@ def get_nav_bar():
 
     return navbar
 
+def get_emptyrow(h='15px'):
+    """This returns an empty row of a defined height"""
+
+    emptyrow = html.Div([
+        html.Div([
+            html.Br()
+        ], className = 'col-12')
+    ],
+    className = 'row',
+    style = {'height' : h})
+
+    return emptyrow
+
 def drug_App():
     return html.Div([
         get_drug_header(),
         get_nav_bar(),
+        get_emptyrow(),
         html.Div([
             html.Div([
                 dcc.Dropdown(
