@@ -1,6 +1,7 @@
 import dash
 from dash import html
 from dash import dash, html, dcc
+from drugs import get_emptyrow
 
 
 app = dash.Dash(__name__)
@@ -44,6 +45,7 @@ def county_App():
     return html.Div([
         get_county_header(),
         get_nav_bar(),
+        get_emptyrow(),
         html.Div([
             html.Div([
                 dcc.Dropdown(
