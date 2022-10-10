@@ -167,7 +167,7 @@ def all_drugs(all_drug_data, years):
     arapahoe_tot = len(df_arapahoe_opiod)
     df_douglas_opiod = df_opiod.loc[(df_opiod['county'] == 'Douglas')]
     douglas_tot = len(df_douglas_opiod)
-    # tc_tot = adams_tot + arapahoe_tot + douglas_tot
+    tc_opiod_tot = adams_tot + arapahoe_tot + douglas_tot
     # print(tc_tot)
 
 
@@ -194,11 +194,11 @@ def all_drugs(all_drug_data, years):
         ],
             className='row'
         ),
-        # html.Div([
-        #     html.H6('Tri-County = {}'.format(tc_tot))
-        # ],
-        #     className='row'
-        # ),
+        html.Div([
+            html.H6('Tri-County = {}'.format(tc_opiod_tot))
+        ],
+            className='row'
+        ),
     ])
 
 
