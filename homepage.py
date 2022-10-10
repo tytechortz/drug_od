@@ -11,6 +11,12 @@ body = html.Div([
     ],
         className='row'
     ),
+    html.Div([
+        html.H2('Drug Overdose Data by County'),
+        dbc.Button('Open App', href="/county-data"),
+    ],
+        className='row'
+    ),
 ])
 
 def Homepage():
