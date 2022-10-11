@@ -157,12 +157,12 @@ def all_drugs(all_drug_data, years, county):
     # print(df_ad)
     return html.Div([
         html.Div([
-            html.H4('All Drug OD Total For {}'.format(years))
+            html.H4('{} County All Drug OD Total For {}'.format(county,years))
         ],
             className='row'
         ),
         html.Div([
-            html.H6('Adams = {}'.format(total))
+            html.H6('All Drug OD Total = {}'.format(total))
         ],
             className='row'
         ),
