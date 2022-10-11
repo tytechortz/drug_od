@@ -70,7 +70,7 @@ def county_App():
         ],
             className='row'
         ),
-        html.Div(id='all-drug-stats'),
+        html.Div(id='county-all-drug-stats'),
         # dcc.Store(id='all-data', storage_type='memory'),
     ])
 

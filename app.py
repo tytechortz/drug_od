@@ -129,7 +129,59 @@ def get_stats(years):
     return df1.to_json()
 
 
+@app.callback(
+    Output('county-all-drug-stats', 'children'),
+    Input('all-data', 'data'),
+    Input('years', 'value'),
+    Input('county', 'value'))
+def all_drugs(all_drug_data, years, county):
+    df_ad = pd.read_json(all_drug_data)
+    df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
 
+
+    df_ad = df_ad.loc[(df_ad['county'] == county)]
+
+    total = len(df_ad)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+    # df_douglas_ad = df_ad.loc[(df_ad['county'] == 'Douglas')]
+    # douglas_tot = len(df_douglas_ad)
+    # tc_tot = adams_tot + arapahoe_tot + douglas_tot
+    # print(tc_tot)
+
+
+
+    # print(df_ad)
+    return html.Div([
+        html.Div([
+            html.H4('All Drug OD Total For {}'.format(years))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Adams = {}'.format(total))
+        ],
+            className='row'
+        ),
+        # html.Div([
+        #     html.H6('Arapahoe = {}'.format(arapahoe_tot))
+        # ],
+        #     className='row'
+        # ),
+        # html.Div([
+        #     html.H6('Douglas = {}'.format(douglas_tot))
+        # ],
+        #     className='row'
+        # ),
+        # html.Div([
+        #     html.H6('Tri-County = {}'.format(tc_tot))
+        # ],
+        #     className='row'
+        # ),
+    ])
 
 @app.callback(
     Output('all-drug-stats', 'children'),
