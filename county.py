@@ -51,7 +51,8 @@ def county_App():
                 dcc.Dropdown(
                     ['Adams', 'Arapahoe', 'Douglas'],
                     id='county',
-                    multi=True
+                    multi=False,
+                    placeholder='Select County'
                 ),
             ],
                 className='four columns'
@@ -60,7 +61,8 @@ def county_App():
                 dcc.Dropdown(
                     [2018,2019,2020,2021],
                     id='years',
-                    multi=True
+                    multi=True,
+                    placeholder='Select year(s)'
                 ),
             ],
                 className='four columns'
