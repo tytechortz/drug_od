@@ -56,6 +56,15 @@ def county_App():
             ],
                 className='four columns'
             ),
+            html.Div([
+                dcc.Dropdown(
+                    [2018,2019,2020,2021],
+                    id='years',
+                    multi=True
+                ),
+            ],
+                className='four columns'
+            ),
         ],
             className='row'
         ),
