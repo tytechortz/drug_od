@@ -29,6 +29,8 @@ df['u'] = df['ucod'].str[1:3].fillna(0).astype(int)
 df.reset_index(inplace=True)
 
 
+
+
 def get_layout():
     return html.Div(
         [
@@ -43,6 +45,11 @@ def get_layout():
                 ],
                     className='six columns'
                 ),
+                html.Div([
+                    html.H6('Select County')
+                ],
+                    className='six columns'
+                ),
             ],
                 className='row'
             ),
@@ -52,6 +59,16 @@ def get_layout():
                         2017,2021,1, value=[2017,2021],
                         id='years',
                         marks={2017:'2017',2018:'2018',2019:'2019',2020:'2020',2021:'2021'},
+                    ),
+                ],
+                    className='six columns'
+                ),
+                html.Div([
+                    dcc.Dropdown(
+                        ['Adams','Arapahoe','Douglas'],
+                        id='counties',
+                        placeholder='Select County',
+                        multi=True
                     ),
                 ],
                     className='six columns'
@@ -77,6 +94,54 @@ def get_layout():
 app = dash.Dash(__name__)
 app.layout = get_layout
 # app.config.supress_callback_exceptions = True
+
+@app.callback(
+    Output('all-data', 'data'),
+    Input('years', 'value'))
+def get_stats(years):
+    print(years)
+    # print(df)
+    
+    selected_df = df[df['year'].isin(years)]
+    # print(selected_df)
+    
+    df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county']]
+    # print(df1)
+    return df1.to_json()
+
+@app.callback(
+    Output('all-drug-stats', 'children'),
+    Input('all-data', 'data'))
+def all_drugs(all_drug_data, years):
+    df_ad = pd.read_json(all_drug_data)
+    df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
+
+    df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    adams_tot = len(df_adams_ad)
+    df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    arapahoe_tot = len(df_arapahoe_ad)
+
+
+    return html.Div([
+        html.Div([
+            html.H4('All Drug OD Total For {}'.format(years))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Adams = {}'.format(adams_tot))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Arapahoe = {}'.format(arapahoe_tot))
+        ],
+            className='row'
+        ),
+    ])
+
+
+
 
 
 if __name__ == "__main__":
