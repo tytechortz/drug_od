@@ -39,13 +39,22 @@ def get_layout():
             ),
             html.Div([
                 html.Div([
-                    dcc.Dropdown(
-                        [2018,2019,2020,2021],
+                    html.H6('Select Years')
+                ],
+                    className='six columns'
+                ),
+            ],
+                className='row'
+            ),
+            html.Div([
+                html.Div([
+                    dcc.RangeSlider(
+                        2017,2021,1, value=[2017,2021],
                         id='years',
-                        multi=True
+                        marks={2017:'2017',2018:'2018',2019:'2019',2020:'2020',2021:'2021'},
                     ),
                 ],
-                    className='four columns'
+                    className='six columns'
                 ),
             ],
                 className='row'
