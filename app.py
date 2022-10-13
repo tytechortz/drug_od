@@ -113,7 +113,7 @@ def display_page(pathname):
     Output('all-data', 'data'),
     Input('years', 'value'))
 def get_stats(years):
-    print(years)
+    # print(years)
     # print(df)
     
 
@@ -143,6 +143,8 @@ def all_drugs(all_drug_data, years, county):
 
     total = len(df_ad)
 
+    print(years[0])
+
     # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
     # adams_tot = len(df_adams_ad)
     # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
@@ -151,13 +153,18 @@ def all_drugs(all_drug_data, years, county):
     # douglas_tot = len(df_douglas_ad)
     # tc_tot = adams_tot + arapahoe_tot + douglas_tot
     # print(tc_tot)
+    if len(years) == 1:
+        year_display = years[0]
+    else:
+        for y in years:
+            year_display = '{} - {}'.format(years[0],years[-1])
 
 
 
     # print(df_ad)
     return html.Div([
         html.Div([
-            html.H4('{} County All Drug OD Total For {}'.format(county,years))
+            html.H4('{} County All Drug OD Total For {}'.format(county,year_display))
         ],
             className='row'
         ),
