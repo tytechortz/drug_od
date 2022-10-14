@@ -46,7 +46,7 @@ def get_layout():
                     className='six columns'
                 ),
                 html.Div([
-                    html.H6('Select County')
+                    html.H6('Select Drug')
                 ],
                     className='six columns'
                 ),
@@ -102,7 +102,7 @@ def get_layout():
             dcc.Store(id='all-data', storage_type='memory'),
             dcc.Store(id='all-drug-data', storage_type='memory'),
             dcc.Store(id='opiod-data', storage_type='memory'),
-            dcc.Store(id='opiod-stats', storage_type='memory'),
+            # dcc.Store(id='opiod-stats', storage_type='memory'),
         ]
     
     )
@@ -165,14 +165,25 @@ def all_drugs(data, years, counties):
 
 
 @app.callback(
-    Output('opiod-stats', 'children'),
+    Output('stats', 'children'),
     Input('opiod-data', 'data'),
     Input('years', 'value'),
+    Input('drugs', 'value'),
     Input('counties', 'value'))
-def get_opiods(opiod_data,years,counties):
+def get_opiods(opiod_data,years,drug,counties):
     df_opiods = pd.read_json(opiod_data)
+    print(drug)
+    # print(df_opiods)
+    df = df_opiods.loc[(df_opiods['county']==counties[0])]
+    print(df)
+    opiod_od = len(df)
 
-    return html.H6('Sup opiods')
+
+    if drug == 'Opiods':
+        return html.H6('Opiod OD Total = {}'.format(opiod_od))
+
+
+    
     # return html.Div([
     #     html.Div([
     #         html.H4('All Drug OD Total For {}'.format(years))
@@ -190,14 +201,14 @@ def get_opiods(opiod_data,years,counties):
     #         className='row'
     #     ),
     # ])
-@app.callback(
-    Output('stats', 'children'),
-    Input('drugs','value'),
-    Input('opiod-stats', 'children'))
-def get_stats(opiod_stats, drug):
-
-    if drug == 'Opiods':
-        return opiod_stats
+# @app.callback(
+#     Output('stats', 'children'),
+#     Input('drugs','value'),
+#     Input('opiod-stats', 'children'))
+# def get_stats(opiod_stats, drug):
+#     print(drug)
+#     if drug == 'Opiods':
+#         return opiod_stats
     
 
 
