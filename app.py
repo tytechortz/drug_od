@@ -3,6 +3,8 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 import numpy as np
 
+df17 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths17.sas7bdat", encoding='iso-8859-1')
+df17['year'] = 2017
 df18 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths18.sas7bdat", encoding='iso-8859-1')
 df18['year'] = 2018
 df19 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths19.sas7bdat", encoding='iso-8859-1')
@@ -12,7 +14,7 @@ df20['year'] = 2020
 df21 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths21.sas7bdat", encoding='iso-8859-1')
 df21['year'] = 2021
 
-df = pd.concat([df18,df19,df20,df21], axis=0)
+df = pd.concat([df17,df18,df19,df20,df21], axis=0)
 
 conditions = [df['AgeId'] == 1, df['AgeId'] != 1]
 choices = [df['age'], 0]
