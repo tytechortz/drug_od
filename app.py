@@ -187,8 +187,14 @@ def get_opiods(opiod_data,years,drug,counties):
 
 
     if drug == 'Opiods':
-        return html.H6('Opiod OD Total = {}'.format(opiod_od))
-
+        return html.Div([
+            html.Div([
+                html.H6('Data for {} County, {} to {}'.format(counties[0],years[0], years[1]))
+            ],
+                className='row'
+            ),
+            html.H6('Opiod OD Total = {}'.format(opiod_od))
+        ])
 
     
     # return html.Div([
