@@ -117,9 +117,16 @@ app.layout = get_layout
 def get_stats(years):
     print(years)
     # print(df)
+    start_year = years[0]
+    end_year = years[1]
+    print(start_year)
+    print(end_year)
+
     
-    selected_df = df[df['year'].isin(years)]
-    # print(selected_df)
+    
+    # selected_df = df[df['year']>=start_year & df['year']<=end_year]
+    selected_df = df[df['year'].between(start_year, end_year)]
+    print(selected_df)
     
     df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county']]
     # print(df1)
@@ -175,7 +182,7 @@ def get_opiods(opiod_data,years,drug,counties):
     print(drug)
     # print(df_opiods)
     df = df_opiods.loc[(df_opiods['county']==counties[0])]
-    print(df)
+    # print(df)
     opiod_od = len(df)
 
 
