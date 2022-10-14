@@ -61,8 +61,21 @@ def get_layout():
                         marks={2017:'2017',2018:'2018',2019:'2019',2020:'2020',2021:'2021'},
                     ),
                 ],
+                    className='four columns'
+                ),
+                html.Div([
+                    dcc.RadioItems(
+                        ['All Drugs','Opiods','Meth'],
+                        id='drugs',
+                        inline=True
+                    ),
+                ],
                     className='six columns'
                 ),
+            ],
+                className='row'
+            ),
+            html.Div([
                 html.Div([
                     dcc.Dropdown(
                         ['Adams','Arapahoe','Douglas'],
@@ -77,16 +90,19 @@ def get_layout():
                 className='row'
             ),
             html.Div([
-                html.Div(id='all-drug-stats'),
+                html.Div(id='stats'),
             ],
                 className='row'
             ),
-            html.Div([
-                html.Div(id='opiod-stats'),
-            ],
-                className='row'
-            ),
+            # html.Div([
+            #     html.Div(id='opiod-stats'),
+            # ],
+            #     className='row'
+            # ),
             dcc.Store(id='all-data', storage_type='memory'),
+            dcc.Store(id='all-drug-data', storage_type='memory'),
+            dcc.Store(id='opiod-data', storage_type='memory'),
+            dcc.Store(id='opiod-stats', storage_type='memory'),
         ]
     
     )
@@ -110,35 +126,79 @@ def get_stats(years):
     return df1.to_json()
 
 @app.callback(
-    Output('all-drug-stats', 'children'),
-    Input('all-data', 'data'))
-def all_drugs(all_drug_data, years):
-    df_ad = pd.read_json(all_drug_data)
+    Output('all-drug-data', 'data'),
+    Input('all-data', 'data'),
+    Input('years', 'value'),
+    Input('counties', 'value'))
+def all_drugs(all_data, years, counties):
+    df_ad = pd.read_json(all_data)
     df_ad = df_ad.loc[((df_ad['ucid']=='X') & ((df_ad['u'].between(40,44)) | (df_ad['u'].between(60,64)) | (df_ad['u']==85))) | ((df_ad['ucid']=='Y') & df_ad['u'].between(10,14))]
 
-    df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
-    adams_tot = len(df_adams_ad)
-    df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
-    arapahoe_tot = len(df_arapahoe_ad)
+    # print(counties)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+
+    return df_ad.to_json()
+
+@app.callback(
+    Output('opiod-data', 'data'),
+    Input('all-drug-data', 'data'),
+    Input('years', 'value'),
+    Input('counties', 'value'))
+def all_drugs(data, years, counties):
+    df_ad_op = pd.read_json(data)
+
+    opiod_codes = ['T402', 'T403', 'T404']
+    df_opiods = df_ad_op.loc[df_ad_op.iloc[:, 1:13].isin(opiod_codes).any(axis=1)]
+
+    print(counties)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+
+    return df_opiods.to_json()
 
 
-    return html.Div([
-        html.Div([
-            html.H4('All Drug OD Total For {}'.format(years))
-        ],
-            className='row'
-        ),
-        html.Div([
-            html.H6('Adams = {}'.format(adams_tot))
-        ],
-            className='row'
-        ),
-        html.Div([
-            html.H6('Arapahoe = {}'.format(arapahoe_tot))
-        ],
-            className='row'
-        ),
-    ])
+@app.callback(
+    Output('opiod-stats', 'children'),
+    Input('opiod-data', 'data'),
+    Input('years', 'value'),
+    Input('counties', 'value'))
+def get_opiods(opiod_data,years,counties):
+    df_opiods = pd.read_json(opiod_data)
+
+    return html.H6('Sup opiods')
+    # return html.Div([
+    #     html.Div([
+    #         html.H4('All Drug OD Total For {}'.format(years))
+    #     ],
+    #         className='row'
+    #     ),
+    #     html.Div([
+    #         html.H6('Adams = {}'.format(adams_tot))
+    #     ],
+    #         className='row'
+    #     ),
+    #     html.Div([
+    #         html.H6('Arapahoe = {}'.format(arapahoe_tot))
+    #     ],
+    #         className='row'
+    #     ),
+    # ])
+@app.callback(
+    Output('stats', 'children'),
+    Input('drugs','value'),
+    Input('opiod-stats', 'children'))
+def get_stats(opiod_stats, drug):
+
+    if drug == 'Opiods':
+        return opiod_stats
+    
 
 
 
