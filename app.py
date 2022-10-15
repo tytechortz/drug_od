@@ -1,5 +1,6 @@
 from dash import dash, html, dcc
 from dash.dependencies import Input, Output, State
+import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 
@@ -45,12 +46,12 @@ def get_layout():
                 html.Div([
                     html.H6('Select Years')
                 ],
-                    className='six columns'
+                    className='four columns'
                 ),
                 html.Div([
                     html.H6('Select Drug')
                 ],
-                    className='six columns'
+                    className='four columns'
                 ),
             ],
                 className='row'
@@ -72,7 +73,7 @@ def get_layout():
                         inline=True
                     ),
                 ],
-                    className='six columns'
+                    className='four columns'
                 ),
             ],
                 className='row'
@@ -83,16 +84,23 @@ def get_layout():
                         ['Adams','Arapahoe','Douglas'],
                         id='counties',
                         placeholder='Select County',
-                        multi=True
+                        multi=False
                     ),
                 ],
-                    className='six columns'
+                    className='four columns'
                 ),
             ],
                 className='row'
             ),
             html.Div([
                 html.Div(id='stats'),
+                html.Div([
+                    dcc.Graph(
+                        id='drug-histogram'
+                    )
+                ],
+                    className='six columns'
+                ),
             ],
                 className='row'
             ),
@@ -128,7 +136,7 @@ def get_stats(years):
     
     # selected_df = df[df['year']>=start_year & df['year']<=end_year]
     selected_df = df[df['year'].between(start_year, end_year)]
-    print(selected_df)
+    # print(selected_df)
     
     df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county']]
     # print(df1)
@@ -183,7 +191,7 @@ def get_opiods(opiod_data,years,drug,counties):
     df_opiods = pd.read_json(opiod_data)
     print(drug)
     # print(df_opiods)
-    df = df_opiods.loc[(df_opiods['county']==counties[0])]
+    df = df_opiods.loc[(df_opiods['county']==counties)]
     # print(df)
     opiod_od = len(df)
 
@@ -198,6 +206,41 @@ def get_opiods(opiod_data,years,drug,counties):
             html.H6('Opiod OD Total = {}'.format(opiod_od))
         ])
 
+@app.callback(
+    Output('drug-histogram', 'figure'),
+    Input('opiod-data', 'data'),
+    Input('counties', 'value'),
+    Input('years', 'value'))
+def powell_graph(opiod_data, county, years):
+    opg = pd.read_json(opiod_data)
+    
+    df = opg.loc[(opg['county']==county)]
+    print(df)
+    deaths = df.groupby(['year']).size()
+    print(deaths.index)
+    
+
+   
+    drug_traces = []
+
+    drug_traces.append(go.Bar(
+        y = deaths,
+        x = deaths.index,
+        name='Water Level',
+    )),
+
+    
+
+    drug_layout = go.Layout(
+        height =600,
+        title = 'Drugs',
+        yaxis = {'title':'Volume (AF)'},
+        paper_bgcolor="#1f2630",
+        plot_bgcolor="#1f2630",
+        font=dict(color="#2cfec1"),
+    )
+
+    return {'data': drug_traces, 'layout': drug_layout}
     
     # return html.Div([
     #     html.Div([
