@@ -69,7 +69,8 @@ def get_layout():
                 html.Div([
                     dcc.RadioItems(
                         ['All Drugs','Opiods','Meth'],
-                        id='drugs',
+                        id='drug',
+                        # value='All Drugs',
                         inline=True
                     ),
                 ],
@@ -83,6 +84,7 @@ def get_layout():
                     dcc.Dropdown(
                         ['Adams','Arapahoe','Douglas'],
                         id='counties',
+                        # value='Adams',
                         placeholder='Select County',
                         multi=False
                     ),
@@ -192,7 +194,7 @@ def meth_data(data, years, counties):
     meth_codes = ['T436']
     df_meth = df_ad_meth.loc[df_ad_meth.iloc[:, 1:13].isin(meth_codes).any(axis=1)]
 
-    print(df_meth)
+    # print(df_meth)
 
     # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
     # adams_tot = len(df_adams_ad)
@@ -207,7 +209,7 @@ def meth_data(data, years, counties):
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
     Input('years', 'value'),
-    Input('drugs', 'value'),
+    Input('drug', 'value'),
     Input('counties', 'value'))
 def get_opiods(opiod_data,meth_data,years,drug,counties):
     df_opiods = pd.read_json(opiod_data)
@@ -248,18 +250,31 @@ def get_opiods(opiod_data,meth_data,years,drug,counties):
 
 @app.callback(
     Output('drug-histogram', 'figure'),
+    Input('all-drug-data', 'data'),
     Input('opiod-data', 'data'),
+    Input('meth-data', 'data'),
     Input('counties', 'value'),
+    Input('drug', 'value'),
     Input('years', 'value'))
-def powell_graph(opiod_data, county, years):
+def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
     opg = pd.read_json(opiod_data)
-    
-    df = opg.loc[(opg['county']==county)]
-    # print(df)
+
+    if drug == 'All Drugs':
+        df = pd.read_json(ad_data)
+        print(df)
+        df = df.loc[df['county']==county]
+    elif drug == 'Opiods':
+        df = pd.read_json(opiod_data)
+        df = df.loc['county']==county
+    elif drug == 'Meth':
+        df = pd.read_json(meth_data)
+        df = df.loc['county']==county
+
+
     deaths = df.groupby(['year']).size()
     # print(deaths.index)
     
-
+    print(df)
    
     drug_traces = []
 
