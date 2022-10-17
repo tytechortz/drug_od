@@ -44,17 +44,17 @@ def get_layout():
             ),
             html.Div([
                 html.Div([
-                    html.H6('Select Drug')
+                    html.H6('Select Drug', style={'text-align': 'center'})
                 ],
                     className='four columns'
                 ),
                 html.Div([
-                    html.H6('Select County')
+                    html.H6('Select County', style={'text-align': 'center'})
                 ],
                     className='four columns'
                 ),
                 html.Div([
-                    html.H6('Select Years')
+                    html.H6('Select Years', style={'text-align': 'center'})
                 ],
                     className='four columns'
                 ),    
