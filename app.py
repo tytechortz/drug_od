@@ -53,19 +53,16 @@ def get_layout():
                 ],
                     className='four columns'
                 ),
+                
             ],
                 className='row'
             ),
             html.Div([
-                html.Div([
-                    dcc.RangeSlider(
-                        2017,2021,1, value=[2017,2021],
-                        id='years',
-                        marks={2017:'2017',2018:'2018',2019:'2019',2020:'2020',2021:'2021'},
-                    ),
-                ],
-                    className='four columns'
-                ),
+                
+            ],
+                className='row'
+            ),
+            html.Div([
                 html.Div([
                     dcc.RadioItems(
                         ['All Drugs','Opiod','Meth'],
@@ -76,10 +73,6 @@ def get_layout():
                 ],
                     className='four columns'
                 ),
-            ],
-                className='row'
-            ),
-            html.Div([
                 html.Div([
                     dcc.Dropdown(
                         ['Adams','Arapahoe','Douglas'],
@@ -87,6 +80,15 @@ def get_layout():
                         value='Adams',
                         placeholder='Select County',
                         multi=False
+                    ),
+                ],
+                    className='four columns'
+                ),
+                html.Div([
+                    dcc.RangeSlider(
+                        2017,2021,1, value=[2017,2021],
+                        id='years',
+                        marks={2017:'2017',2018:'2018',2019:'2019',2020:'2020',2021:'2021'},
                     ),
                 ],
                     className='four columns'
@@ -326,7 +328,7 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
 
     drug_layout = go.Layout(
         height =500,
-        title = '{}  Annual OD Totals for {} County'.format(drug,county),
+        title = '{} County Annual OD Totals for {}'.format(county, drug),
         yaxis = {'title':'OD Total'},
         xaxis = {'title':'Year','ticklabelmode':'period'},
         paper_bgcolor="#1f2630",
