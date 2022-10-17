@@ -102,7 +102,7 @@ def get_layout():
             html.Div([
                 html.Div([
                     html.Div([
-                        html.H4('County Data')
+                        html.H5('County Data')
                     ],
                         className='row'
                     ),
@@ -327,13 +327,13 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
         name='Water Level',
     )),
 
-    
+    xaxis_values = year_list
 
     drug_layout = go.Layout(
         height =500,
         title = '{} County Annual OD Totals for {}'.format(county, drug),
         yaxis = {'title':'OD Total'},
-        xaxis = {'title':'Year','ticklabelmode':'period'},
+        xaxis = {'title':'Year','tickmode':'array', 'tickvals':xaxis_values},
         paper_bgcolor="#1f2630",
         plot_bgcolor="#1f2630",
         font=dict(color="#2cfec1"),
