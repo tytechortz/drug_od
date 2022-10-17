@@ -68,7 +68,7 @@ def get_layout():
             html.Div([
                 html.Div([
                     dcc.RadioItems(
-                        ['All Drugs','Opiod','Meth','Fent'],
+                        ['All Drugs','Opiod','Meth','Fentanyl'],
                         id='drug',
                         value='All Drugs',
                         inline=True
@@ -252,7 +252,7 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,years,drug,counties
         df = pd.read_json(opiod_data)
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
-    elif drug == 'Fent':
+    elif drug == 'Fentanyl':
         df = pd.read_json(fent_data)
     else:
         df = pd.read_json(all_drugs_data)
@@ -326,7 +326,7 @@ def powell_graph(ad_data,opiod_data,meth_data,fent_data,county,drug,years):
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
         df = df.loc[df['county']==county] 
-    elif drug == 'Fent':
+    elif drug == 'Fentanyl':
         df = pd.read_json(fent_data)
         df = df.loc[df['county']==county]
 
