@@ -38,7 +38,7 @@ def get_layout():
     return html.Div(
         [
             html.Div([
-                html.H4('Drug OD Data')
+                html.H4('Drug OD Data', style={'text-align': 'center'})
             ],
                 className='row'
             ),
