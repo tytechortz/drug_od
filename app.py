@@ -70,7 +70,7 @@ def get_layout():
                     dcc.RadioItems(
                         ['All Drugs','Opiod','Meth'],
                         id='drug',
-                        # value='All Drugs',
+                        value='All Drugs',
                         inline=True
                     ),
                 ],
@@ -84,7 +84,7 @@ def get_layout():
                     dcc.Dropdown(
                         ['Adams','Arapahoe','Douglas'],
                         id='counties',
-                        # value='Adams',
+                        value='Adams',
                         placeholder='Select County',
                         multi=False
                     ),
@@ -288,7 +288,7 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
-        print(df)
+        # print(df)
         df = df.loc[df['county']==county]
     elif drug == 'Opiod':
         df = pd.read_json(opiod_data)
@@ -300,14 +300,25 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
 
     deaths = df.groupby(['year']).size()
     # print(deaths.index)
-    
-    print(df)
+    deaths = deaths.to_frame()
+    deaths['text_year'] = deaths.index.map(str)
+    print(deaths.text_year.dtypes)
+
+    year_length = len(deaths)
+    print(year_length)
+    print(years[-1])
+    year_list = list(range(years[0],(years[-1]+1)))
+    print(year_list)
+    print(years[-1])
+
    
     drug_traces = []
 
+
+
     drug_traces.append(go.Bar(
-        y = deaths,
-        x = deaths.index,
+        y = deaths[0],
+        x = deaths['text_year'],
         name='Water Level',
     )),
 
@@ -316,7 +327,8 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
     drug_layout = go.Layout(
         height =600,
         title = 'Drugs',
-        yaxis = {'title':'Volume (AF)'},
+        yaxis = {'title':'OD Total'},
+        xaxis = {'title':'Year','ticklabelmode':'period'},
         paper_bgcolor="#1f2630",
         plot_bgcolor="#1f2630",
         font=dict(color="#2cfec1"),
