@@ -68,7 +68,7 @@ def get_layout():
             html.Div([
                 html.Div([
                     dcc.RadioItems(
-                        ['All Drugs','Opiod','Meth', 'Fent'],
+                        ['All Drugs','Opiod','Meth','Fent'],
                         id='drug',
                         value='All Drugs',
                         inline=True
@@ -127,6 +127,7 @@ def get_layout():
             dcc.Store(id='all-drug-data', storage_type='memory'),
             dcc.Store(id='opiod-data', storage_type='memory'),
             dcc.Store(id='meth-data', storage_type='memory'),
+            dcc.Store(id='fent-data', storage_type='memory'),
             # dcc.Store(id='opiod-stats', storage_type='memory'),
         ]
     
@@ -215,21 +216,44 @@ def meth_data(data, years, counties):
 
     return df_meth.to_json()
 
+@app.callback(
+    Output('fent-data', 'data'),
+    Input('all-drug-data', 'data'),
+    Input('years', 'value'),
+    Input('counties', 'value'))
+def meth_data(data, years, counties):
+    df_ad_fent = pd.read_json(data)
+
+    fent_codes = ['T404']
+    df_fent = df_ad_fent.loc[df_ad_fent.iloc[:, 1:13].isin(fent_codes).any(axis=1)]
+
+    print(df_fent)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+
+    return df_fent.to_json()
+
 
 @app.callback(
     Output('stats', 'children'),
     Input('all-drug-data', 'data'),
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
+    Input('fent-data', 'data'),
     Input('years', 'value'),
     Input('drug', 'value'),
     Input('counties', 'value'))
-def get_opiods(all_drugs_data,opiod_data,meth_data,years,drug,counties):
+def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,years,drug,counties):
 
     if drug == 'Opiod':
         df = pd.read_json(opiod_data)
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
+    elif drug == 'Fent':
+        df = pd.read_json(fent_data)
     else:
         df = pd.read_json(all_drugs_data)
 
@@ -285,10 +309,11 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,years,drug,counties):
     Input('all-drug-data', 'data'),
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
+    Input('fent-data', 'data'),
     Input('counties', 'value'),
     Input('drug', 'value'),
     Input('years', 'value'))
-def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
+def powell_graph(ad_data,opiod_data,meth_data,fent_data,county,drug,years):
     opg = pd.read_json(opiod_data)
 
     if drug == 'All Drugs':
@@ -300,8 +325,10 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
         df = df.loc[df['county']==county]
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
+        df = df.loc[df['county']==county] 
+    elif drug == 'Fent':
+        df = pd.read_json(fent_data)
         df = df.loc[df['county']==county]
-
 
     deaths = df.groupby(['year']).size()
     # print(deaths.index)
