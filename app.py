@@ -44,21 +44,24 @@ def get_layout():
             ),
             html.Div([
                 html.Div([
-                    html.H6('Select Years')
-                ],
-                    className='four columns'
-                ),
-                html.Div([
                     html.H6('Select Drug')
                 ],
                     className='four columns'
                 ),
-                
+                html.Div([
+                    html.H6('Select County')
+                ],
+                    className='four columns'
+                ),
+                html.Div([
+                    html.H6('Select Years')
+                ],
+                    className='four columns'
+                ),    
             ],
                 className='row'
             ),
             html.Div([
-                
             ],
                 className='row'
             ),
