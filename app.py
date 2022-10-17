@@ -307,23 +307,16 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
     # print(deaths.index)
     deaths = deaths.to_frame()
     deaths['text_year'] = deaths.index.map(str)
-    print(deaths.text_year.dtypes)
-
-    year_length = len(deaths)
-    print(year_length)
-    print(years[-1])
+ 
     year_list = list(range(years[0],(years[-1]+1)))
     print(year_list)
-    print(years[-1])
-
-   
+    
     drug_traces = []
-
-
 
     drug_traces.append(go.Bar(
         y = deaths[0],
         x = deaths['text_year'],
+        text=deaths[0],
         name='Water Level',
     )),
 
