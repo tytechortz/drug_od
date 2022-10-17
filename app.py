@@ -325,8 +325,8 @@ def powell_graph(ad_data,opiod_data,meth_data, county,drug,years):
     
 
     drug_layout = go.Layout(
-        height =600,
-        title = 'Drugs',
+        height =500,
+        title = '{}  Annual OD Totals for {} County'.format(drug,county),
         yaxis = {'title':'OD Total'},
         xaxis = {'title':'Year','ticklabelmode':'period'},
         paper_bgcolor="#1f2630",
