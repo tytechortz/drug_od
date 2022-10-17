@@ -133,7 +133,7 @@ def get_layout():
     
     )
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, suppress_callback_exceptions=True)
 app.layout = get_layout
 # app.config.supress_callback_exceptions = True
 
@@ -207,7 +207,7 @@ def meth_data(data, years, counties):
     meth_codes = ['T436']
     df_meth = df_ad_meth.loc[df_ad_meth.iloc[:, 1:13].isin(meth_codes).any(axis=1)]
 
-    # print(df_meth)
+    print(counties)
 
     # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
     # adams_tot = len(df_adams_ad)
@@ -227,7 +227,7 @@ def meth_data(data, years, counties):
     fent_codes = ['T404']
     df_fent = df_ad_fent.loc[df_ad_fent.iloc[:, 1:13].isin(fent_codes).any(axis=1)]
 
-    print(df_fent)
+    print(years)
 
     # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
     # adams_tot = len(df_adams_ad)
