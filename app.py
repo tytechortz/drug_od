@@ -68,7 +68,7 @@ def get_layout():
             html.Div([
                 html.Div([
                     dcc.RadioItems(
-                        ['All Drugs','Opiod','Meth'],
+                        ['All Drugs','Opiod','Meth', 'Fent'],
                         id='drug',
                         value='All Drugs',
                         inline=True
