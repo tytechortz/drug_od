@@ -128,7 +128,7 @@ def get_layout():
             dcc.Store(id='opiod-data', storage_type='memory'),
             dcc.Store(id='meth-data', storage_type='memory'),
             dcc.Store(id='fent-data', storage_type='memory'),
-            dcc.Store(id='hero-data', storage_type='memory'),
+            dcc.Store(id='heroin-data', storage_type='memory'),
             # dcc.Store(id='opiod-stats', storage_type='memory'),
         ]
     
@@ -236,6 +236,26 @@ def meth_data(data, years, counties):
     # arapahoe_tot = len(df_arapahoe_ad)
 
     return df_fent.to_json()
+
+@app.callback(
+    Output('heroin-data', 'data'),
+    Input('all-drug-data', 'data'),
+    Input('years', 'value'),
+    Input('counties', 'value'))
+def heroin_data(data, years, counties):
+    df_ad_he = pd.read_json(data)
+
+    heroin_codes = ['T401']
+    df_heroin = df_ad_he.loc[df_ad_he.iloc[:, 1:13].isin(heroin_codes).any(axis=1)]
+
+    print(counties)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+
+    return df_heroin.to_json()
 
 
 @app.callback(
