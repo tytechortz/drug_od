@@ -334,10 +334,11 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,heroin_data,years,d
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
     Input('fent-data', 'data'),
+    Input('heroin-data', 'data'),
     Input('counties', 'value'),
     Input('drug', 'value'),
     Input('years', 'value'))
-def powell_graph(ad_data,opiod_data,meth_data,fent_data,county,drug,years):
+def powell_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
     opg = pd.read_json(opiod_data)
 
     if drug == 'All Drugs':
@@ -353,6 +354,10 @@ def powell_graph(ad_data,opiod_data,meth_data,fent_data,county,drug,years):
     elif drug == 'Fentanyl':
         df = pd.read_json(fent_data)
         df = df.loc[df['county']==county]
+    elif drug == 'Heroin':
+        df = pd.read_json(heroin_data)
+        df = df.loc[df['county']==county]
+
 
     deaths = df.groupby(['year']).size()
     # print(deaths.index)
