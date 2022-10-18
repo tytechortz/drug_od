@@ -264,10 +264,11 @@ def heroin_data(data, years, counties):
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
     Input('fent-data', 'data'),
+    Input('heroin-data', 'data'),
     Input('years', 'value'),
     Input('drug', 'value'),
     Input('counties', 'value'))
-def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,years,drug,counties):
+def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,heroin_data,years,drug,counties):
 
     if drug == 'Opiod':
         df = pd.read_json(opiod_data)
@@ -275,6 +276,8 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,years,drug,counties
         df = pd.read_json(meth_data)
     elif drug == 'Fentanyl':
         df = pd.read_json(fent_data)
+    elif drug == 'Heroin':
+        df = pd.read_json(heroin_data)
     else:
         df = pd.read_json(all_drugs_data)
 
