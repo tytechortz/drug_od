@@ -68,7 +68,7 @@ def get_layout():
             html.Div([
                 html.Div([
                     dcc.RadioItems(
-                        ['All Drugs','Opiod','Meth','Fentanyl'],
+                        ['All Drugs','Opiod','Meth','Fentanyl','Heroin'],
                         id='drug',
                         value='All Drugs',
                         inline=True
@@ -128,6 +128,7 @@ def get_layout():
             dcc.Store(id='opiod-data', storage_type='memory'),
             dcc.Store(id='meth-data', storage_type='memory'),
             dcc.Store(id='fent-data', storage_type='memory'),
+            dcc.Store(id='hero-data', storage_type='memory'),
             # dcc.Store(id='opiod-stats', storage_type='memory'),
         ]
     
