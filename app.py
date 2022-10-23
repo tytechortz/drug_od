@@ -3,6 +3,8 @@ from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
+from flask import Flask
+from flaskwebgui import FlaskUI
 
 df17 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths17.sas7bdat", encoding='iso-8859-1')
 df17['year'] = 2017
@@ -134,7 +136,10 @@ def get_layout():
     
     )
 
+
+
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
+server = app.server
 app.layout = get_layout
 # app.config.supress_callback_exceptions = True
 
@@ -422,4 +427,4 @@ def powell_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,
 
 
 if __name__ == "__main__":
-    app.run_server(port=8080, debug=True)
+    FlaskUI(server, close_server_on_exit=False).run()
