@@ -17,6 +17,9 @@ df20['year'] = 2020
 df21 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths21.sas7bdat", encoding='iso-8859-1')
 df21['year'] = 2021
 
+df_pop = pd.read_csv("/Users/jamesswank/Downloads/sya-county_2020.csv")
+print(df_pop)
+
 df = pd.concat([df17,df18,df19,df20,df21], axis=0)
 
 conditions = [df['AgeId'] == 1, df['AgeId'] != 1]
