@@ -183,7 +183,7 @@ def get_stats(years):
     # print(selected_df)
     
     df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county','totalpopulation']]
-    print(df1)
+    # print(df1)
     return df1.to_json()
 
 @app.callback(
@@ -423,31 +423,48 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     pop = pd.read_json(pop_data)
     # pop = pop.unstack()
     # print(pop)
+    pop = pop.loc[pop['county']==county]
+    pop.set_index('year')
+    print(type(pop))
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
-        # print(df)
+        print(df)
         df = df.loc[df['county']==county]
-        df_pop = pop.loc[pop['county']==county]
-        
+        # pop = pop.loc[pop['county']==county]
+        print(pop)
+
 
     elif drug == 'Opiod':
         df = pd.read_json(opiod_data)
-        df = df.loc[df['county']==county]
+        # pop = pop.loc[pop['county']==county]
+        df.loc[df['county']==county]
+
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
-        df = df.loc[df['county']==county] 
+        df = df.loc[df['county']==county]
+        # pop = pop.loc[pop['county']==county]
+        
+
     elif drug == 'Fentanyl':
         df = pd.read_json(fent_data)
         df = df.loc[df['county']==county]
+        # pop = pop.loc[pop['county']==county]
+
     elif drug == 'Heroin':
         df = pd.read_json(heroin_data)
         df = df.loc[df['county']==county]
+        # pop = pop.loc[pop['county']==county]
 
 
     deaths = df.groupby(['year']).size()
-    # print(deaths.index)
-    deaths = deaths.to_frame()
+    print(type(deaths))
+    
+    deaths = pd.merge(deaths.to_frame(), pop, on=['year'])
+    # deaths.join(pop)
+    print(deaths)
+    # deaths = deaths.to_frame()
+    # print(deaths)
     deaths['text_year'] = deaths.index.map(str)
 
     
@@ -457,7 +474,7 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     
     drug_traces = []
 
-    drug_traces.append(go.Bar(
+    drug_traces.append(go.Scatter(
         y = deaths[0],
         x = deaths['text_year'],
         text=deaths[0],
