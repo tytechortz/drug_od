@@ -7,6 +7,13 @@ from flask import Flask
 from flaskwebgui import FlaskUI
 from scipy import stats
 from numpy import arange
+from datetime import datetime, date, timedelta
+
+
+current_year = datetime.now().year
+startyr = 2017
+year_count = current_year-startyr
+
 
 df17 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths17.sas7bdat", encoding='iso-8859-1')
 df17['year'] = 2017
@@ -467,7 +474,13 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     deaths['rate'] = (deaths[0] / deaths['totalpopulation'])*100000
     print(deaths)
 
-    xi = arange(0,5)
+    year_list = list(range(years[0],(years[-1]+1)))
+    print(year_list)
+
+
+    year_count = len(year_list)
+    print('years = {}'.format(year_count))
+    xi = arange(0,year_count)
     slope, intercept, r_value, p_value, std_err = stats.linregress(xi,deaths['rate'])
     trend = slope*xi+intercept
 
@@ -477,8 +490,7 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
 
     
  
-    year_list = list(range(years[0],(years[-1]+1)))
-    print(year_list)
+    
     
     drug_traces = []
 
@@ -486,14 +498,16 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
         y = deaths['rate'],
         x = deaths['year'],
         text=deaths[0],
-        name='Water Level',
+        name='OD Rate',
     )),
 
     drug_traces.append(go.Scatter(
         y = trend,
         x = deaths['year'],
         text=deaths[0],
-        name='Water Level',
+        name='trend',
+        line = {'color':'red'},
+        mode = 'lines'
     )),
 
     xaxis_values = year_list
