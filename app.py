@@ -310,16 +310,6 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,heroin_data,years,d
     df = df.loc[(df['county']==counties)]
     od_total = len(df)
 
-    # df_opiods = pd.read_json(opiod_data)
-    # df_meth = pd.read_json(meth_data)
-    print(drug)
-    # print(df_opiods)
-    # df_op = df_opiods.loc[(df_opiods['county']==counties)]
-    # # print(df)
-    # opiod_od = len(df_op)
-    # df_me = df_meth.loc[(df_meth['county']==counties)]
-    # # print(df)
-    # meth_od = len(df_me)
 
 
     return html.Div([
@@ -332,27 +322,6 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,heroin_data,years,d
         ])
 
 
-
-
-    # if drug == 'Opiods':
-    #     return html.Div([
-    #         html.Div([
-    #             html.H5('{} County, {} to {}'.format(counties,years[0], years[1]))
-    #         ],
-    #             className='row'
-    #         ),
-    #         html.H6('Opiod OD Total = {}'.format(opiod_od))
-    #     ])
-
-    # elif drug == 'Meth':
-    #     return html.Div([
-    #         html.Div([
-    #             html.H6('Data for {} County, {} to {}'.format(counties[0],years[0], years[1]))
-    #         ],
-    #             className='row'
-    #         ),
-    #         html.H6('Meth OD Total = {}'.format(meth_od))
-    #     ])
 
 @app.callback(
     Output('drug-histogram', 'figure'),
