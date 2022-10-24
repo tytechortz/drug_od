@@ -200,7 +200,9 @@ def all_drugs(years):
   
     df_pop1 = df_pop.loc[((df_pop['year'].between(2017,2021) & (df_pop['county'].isin(counties))))]
     print(df_pop1)
-
+    df_pop1.drop(['id','countyfips','age','malepopulation','femalepopulation','datatype'],axis=1,inplace=True)
+    print(df_pop1)
+# .groupby(['year','county']).sum()
     # print(counties)
 
     # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
@@ -405,12 +407,14 @@ def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,ye
     Input('years', 'value'))
 def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
     pop = pd.read_json(pop_data)
-    print(pop)
+
+    # print(pop)
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
         # print(df)
         df = df.loc[df['county']==county]
+        df_pop = pop.loc[pop['county']==county]
 
     elif drug == 'Opiod':
         df = pd.read_json(opiod_data)
@@ -430,6 +434,8 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     # print(deaths.index)
     deaths = deaths.to_frame()
     deaths['text_year'] = deaths.index.map(str)
+
+    
  
     year_list = list(range(years[0],(years[-1]+1)))
     print(year_list)
