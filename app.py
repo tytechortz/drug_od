@@ -18,7 +18,7 @@ df21 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths21.sas7bdat", enc
 df21['year'] = 2021
 
 df_pop = pd.read_csv("/Users/jamesswank/Downloads/sya-county_2020.csv")
-print(df_pop)
+# print(df_pop)
 
 df = pd.concat([df17,df18,df19,df20,df21], axis=0)
 
@@ -129,6 +129,7 @@ def get_layout():
             #     className='row'
             # ),
             dcc.Store(id='all-data', storage_type='memory'),
+            dcc.Store(id='pop-data', storage_type='memory'),
             dcc.Store(id='all-drug-data', storage_type='memory'),
             dcc.Store(id='opiod-data', storage_type='memory'),
             dcc.Store(id='meth-data', storage_type='memory'),
@@ -184,6 +185,23 @@ def all_drugs(all_data, years, counties):
     # arapahoe_tot = len(df_arapahoe_ad)
 
     return df_ad.to_json()
+
+@app.callback(
+    Output('pop-data', 'data'),
+    Input('years', 'value'))
+def all_drugs(years):
+  
+    df_pop1 = df_pop.loc[(df_pop['year'].between(2015,2021))]
+    print(df_pop1)
+
+    # print(counties)
+
+    # df_adams_ad = df_ad.loc[(df_ad['county'] == 'Adams')]
+    # adams_tot = len(df_adams_ad)
+    # df_arapahoe_ad = df_ad.loc[(df_ad['county'] == 'Arapahoe')]
+    # arapahoe_tot = len(df_arapahoe_ad)
+
+    return df_pop1.to_json()
 
 @app.callback(
     Output('opiod-data', 'data'),
@@ -428,6 +446,7 @@ def powell_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,
 
 
 
-
 if __name__ == "__main__":
-    FlaskUI(server, close_server_on_exit=False).run()
+    app.run_server(port=8000, debug=True)
+# if __name__ == "__main__":
+#     FlaskUI(server, close_server_on_exit=False).run()
