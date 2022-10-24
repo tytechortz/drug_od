@@ -383,7 +383,7 @@ def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,ye
     deaths['text_year'] = deaths.index.map(str)
  
     year_list = list(range(years[0],(years[-1]+1)))
-    print(year_list)
+    # print(year_list)
     
     drug_traces = []
 
@@ -429,16 +429,16 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
-        print(df)
+        # print(df)
         df = df.loc[df['county']==county]
         # pop = pop.loc[pop['county']==county]
-        print(pop)
+        # print(pop)
 
 
     elif drug == 'Opiod':
         df = pd.read_json(opiod_data)
         # pop = pop.loc[pop['county']==county]
-        df.loc[df['county']==county]
+        df = df.loc[df['county']==county]
 
     elif drug == 'Meth':
         df = pd.read_json(meth_data)
@@ -458,15 +458,15 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
 
 
     deaths = df.groupby(['year']).size()
-    print(type(deaths))
+    print(deaths)
     
     deaths = pd.merge(deaths.to_frame(), pop, on=['year'])
     # deaths.join(pop)
-    deaths['rate'] = deaths[0] / deaths['totalpopulation']
+    deaths['rate'] = (deaths[0] / deaths['totalpopulation'])*100000
     print(deaths)
     # deaths = deaths.to_frame()
     # print(deaths)
-    deaths['text_year'] = deaths.index.map(str)
+    # deaths['text_year'] = deaths.index.map(str)
 
     
  
@@ -476,8 +476,8 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     drug_traces = []
 
     drug_traces.append(go.Scatter(
-        y = deaths[0],
-        x = deaths['text_year'],
+        y = deaths['rate'],
+        x = deaths['year'],
         text=deaths[0],
         name='Water Level',
     )),
@@ -486,8 +486,8 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
 
     drug_layout = go.Layout(
         height =500,
-        title = '{} County Annual OD Totals for {}'.format(county, drug),
-        yaxis = {'title':'OD Total'},
+        title = '{} County Annual OD Rate per 100k for {}'.format(county, drug),
+        yaxis = {'title':'OD Rate per 100k'},
         xaxis = {'title':'Year','tickmode':'array', 'tickvals':xaxis_values},
         paper_bgcolor="#1f2630",
         plot_bgcolor="#1f2630",
