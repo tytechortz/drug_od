@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 from flask import Flask
 from flaskwebgui import FlaskUI
+from scipy import stats
+from numpy import arange
 
 df17 = pd.read_sas("/Users/jamesswank/Downloads/tricountydeaths17.sas7bdat", encoding='iso-8859-1')
 df17['year'] = 2017
@@ -464,6 +466,11 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     # deaths.join(pop)
     deaths['rate'] = (deaths[0] / deaths['totalpopulation'])*100000
     print(deaths)
+
+    xi = arange(0,5)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(xi,deaths['rate'])
+    trend = slope*xi+intercept
+
     # deaths = deaths.to_frame()
     # print(deaths)
     # deaths['text_year'] = deaths.index.map(str)
@@ -477,6 +484,13 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
 
     drug_traces.append(go.Scatter(
         y = deaths['rate'],
+        x = deaths['year'],
+        text=deaths[0],
+        name='Water Level',
+    )),
+
+    drug_traces.append(go.Scatter(
+        y = trend,
         x = deaths['year'],
         text=deaths[0],
         name='Water Level',
