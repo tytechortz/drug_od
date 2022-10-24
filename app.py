@@ -196,9 +196,10 @@ def all_drugs(all_data, years, counties):
     Output('pop-data', 'data'),
     Input('years', 'value'))
 def all_drugs(years):
+    counties = ['Adams','Arapahoe','Douglas']
   
-    df_pop1 = df_pop.loc[(df_pop['year'].between(2017,2021))]
-    # print(df_pop1)
+    df_pop1 = df_pop.loc[((df_pop['year'].between(2017,2021) & (df_pop['county'].isin(counties))))]
+    print(df_pop1)
 
     # print(counties)
 
@@ -394,6 +395,7 @@ def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,ye
 @app.callback(
     Output('rate-histogram', 'figure'),
     Input('all-drug-data', 'data'),
+    Input('pop-data', 'data'),
     Input('opiod-data', 'data'),
     Input('meth-data', 'data'),
     Input('fent-data', 'data'),
@@ -401,13 +403,15 @@ def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,ye
     Input('counties', 'value'),
     Input('drug', 'value'),
     Input('years', 'value'))
-def rate_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
-    opg = pd.read_json(opiod_data)
+def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
+    pop = pd.read_json(pop_data)
+    print(pop)
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
         # print(df)
         df = df.loc[df['county']==county]
+
     elif drug == 'Opiod':
         df = pd.read_json(opiod_data)
         df = df.loc[df['county']==county]
