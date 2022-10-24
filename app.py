@@ -191,8 +191,8 @@ def all_drugs(all_data, years, counties):
     Input('years', 'value'))
 def all_drugs(years):
   
-    df_pop1 = df_pop.loc[(df_pop['year'].between(2015,2021))]
-    print(df_pop1)
+    df_pop1 = df_pop.loc[(df_pop['year'].between(2017,2021))]
+    # print(df_pop1)
 
     # print(counties)
 
