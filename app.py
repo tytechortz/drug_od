@@ -105,13 +105,9 @@ def get_layout():
                 className='row'
             ),
             html.Div([
+                
                 html.Div([
-                    html.Div([
-                        html.H5('County Data')
-                    ],
-                        className='row'
-                    ),
-                    html.Div(id='stats'),
+                    dcc.Graph(id='rate-histogram')
                 ],
                     className='six columns'
                 ),
@@ -123,6 +119,16 @@ def get_layout():
             ],
                 className='row'
             ),
+            html.Div([
+                    html.Div([
+                        html.H5('County Data')
+                    ],
+                        className='row'
+                    ),
+                    html.Div(id='stats'),
+                ],
+                    className='six columns'
+                ),
             # html.Div([
             #     html.Div(id='opiod-stats'),
             # ],
@@ -333,7 +339,69 @@ def get_opiods(all_drugs_data,opiod_data,meth_data,fent_data,heroin_data,years,d
     Input('counties', 'value'),
     Input('drug', 'value'),
     Input('years', 'value'))
-def powell_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
+def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
+    opg = pd.read_json(opiod_data)
+
+    if drug == 'All Drugs':
+        df = pd.read_json(ad_data)
+        # print(df)
+        df = df.loc[df['county']==county]
+    elif drug == 'Opiod':
+        df = pd.read_json(opiod_data)
+        df = df.loc[df['county']==county]
+    elif drug == 'Meth':
+        df = pd.read_json(meth_data)
+        df = df.loc[df['county']==county] 
+    elif drug == 'Fentanyl':
+        df = pd.read_json(fent_data)
+        df = df.loc[df['county']==county]
+    elif drug == 'Heroin':
+        df = pd.read_json(heroin_data)
+        df = df.loc[df['county']==county]
+
+
+    deaths = df.groupby(['year']).size()
+    # print(deaths.index)
+    deaths = deaths.to_frame()
+    deaths['text_year'] = deaths.index.map(str)
+ 
+    year_list = list(range(years[0],(years[-1]+1)))
+    print(year_list)
+    
+    drug_traces = []
+
+    drug_traces.append(go.Bar(
+        y = deaths[0],
+        x = deaths['text_year'],
+        text=deaths[0],
+        name='Water Level',
+    )),
+
+    xaxis_values = year_list
+
+    drug_layout = go.Layout(
+        height =500,
+        title = '{} County Annual OD Totals for {}'.format(county, drug),
+        yaxis = {'title':'OD Total'},
+        xaxis = {'title':'Year','tickmode':'array', 'tickvals':xaxis_values},
+        paper_bgcolor="#1f2630",
+        plot_bgcolor="#1f2630",
+        font=dict(color="#2cfec1"),
+    )
+
+    return {'data': drug_traces, 'layout': drug_layout}
+
+@app.callback(
+    Output('rate-histogram', 'figure'),
+    Input('all-drug-data', 'data'),
+    Input('opiod-data', 'data'),
+    Input('meth-data', 'data'),
+    Input('fent-data', 'data'),
+    Input('heroin-data', 'data'),
+    Input('counties', 'value'),
+    Input('drug', 'value'),
+    Input('years', 'value'))
+def rate_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
     opg = pd.read_json(opiod_data)
 
     if drug == 'All Drugs':
