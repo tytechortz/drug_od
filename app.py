@@ -462,6 +462,7 @@ def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,count
     
     deaths = pd.merge(deaths.to_frame(), pop, on=['year'])
     # deaths.join(pop)
+    deaths['rate'] = deaths[0] / deaths['totalpopulation']
     print(deaths)
     # deaths = deaths.to_frame()
     # print(deaths)
