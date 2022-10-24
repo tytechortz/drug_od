@@ -36,7 +36,19 @@ df['ucid'] = df['ucod'].str[:1]
 df['u'] = df['ucod'].str[1:3].fillna(0).astype(int)
 df.reset_index(inplace=True)
 
+counties = ['Adams','Arapahoe','Douglas']
+  
+df_pop1 = df_pop.loc[((df_pop['year'].between(2017,2021) & (df_pop['county'].isin(counties))))]
+# print(df_pop1)
+df_pop1.drop(['id','countyfips','age','malepopulation','femalepopulation','datatype'],axis=1,inplace=True)
+# print(df_pop1)
+pop_year_tot = df_pop1.groupby(['year','county']).sum()
+pop_year_tot.reset_index(inplace=True)
 
+df = pd.merge(df, pop_year_tot, on=['county','year'])
+# df.drop(['id','countyfips','age','malepopulation','femalepopulation','datatype'],axis=1,inplace=True)
+
+# print(df.columns)
 
 
 def get_layout():
@@ -170,8 +182,8 @@ def get_stats(years):
     selected_df = df[df['year'].between(start_year, end_year)]
     # print(selected_df)
     
-    df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county']]
-    # print(df1)
+    df1 = selected_df[[ 'age', 'ucod', 'acme1', 'acme2', 'acme3', 'acme4', 'acme5', 'acme6', 'acme7', 'acme8', 'acme9', 'acme10', 'acme11', 'year', 'coor', 'ucid', 'u','age_yr','AgeId','county','totalpopulation']]
+    print(df1)
     return df1.to_json()
 
 @app.callback(
@@ -410,7 +422,7 @@ def drug_graph(ad_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,ye
 def rate_graph(ad_data,pop_data,opiod_data,meth_data,fent_data,heroin_data,county,drug,years):
     pop = pd.read_json(pop_data)
     # pop = pop.unstack()
-    print(pop)
+    # print(pop)
 
     if drug == 'All Drugs':
         df = pd.read_json(ad_data)
